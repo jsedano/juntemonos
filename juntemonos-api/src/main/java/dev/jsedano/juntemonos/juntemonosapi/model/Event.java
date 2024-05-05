@@ -6,34 +6,38 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "community")
+@Table(name = "event")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Community {
+public class Event {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
-  @Column(name = "name")
-  private String name;
+  @Column(name = "title")
+  private String title;
 
   @Column(name = "description")
   private String description;
 
-  @ManyToMany private List<Technology> technologies;
+  @Column(name = "date_time")
+  private LocalDateTime dateTime;
 
-  @ManyToMany private List<Member> members;
+  @Column(name = "location")
+  private String location;
 
-  @OneToMany(mappedBy = "community")
-  private List<Event> events;
+  @ManyToOne private Community community;
+
+  @ManyToMany private List<Member> atendies;
 }

@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -14,26 +13,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "community")
+@Table(name = "member")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Community {
+public class Member {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
+  @Column(name = "hashed_phone_number")
+  private String hashedPhoneNumber;
+
   @Column(name = "name")
   private String name;
 
-  @Column(name = "description")
-  private String description;
+  @ManyToMany(mappedBy = "members")
+  private List<Community> communities;
 
-  @ManyToMany private List<Technology> technologies;
-
-  @ManyToMany private List<Member> members;
-
-  @OneToMany(mappedBy = "community")
+  @ManyToMany(mappedBy = "atendies")
   private List<Event> events;
 }
