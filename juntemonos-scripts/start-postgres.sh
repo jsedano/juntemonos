@@ -8,5 +8,5 @@ if [[ "$(docker ps -aq -f name=juntemonos-postgres)" ]]; then
 else
     echo "Container 'juntemonos-postgres' does not exist. Pulling the image and creating the container..."
     docker pull postgres
-    docker run --name juntemonos-postgres -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_DB=$POSTGRES_DB -d postgres
+    docker run --name juntemonos-postgres -p 5432:5432 -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_DB=$POSTGRES_DB -d postgres
 fi
