@@ -4,3 +4,5 @@
 .vscode/settings.json
 **/target/
 *.db
+**/.mvn/
+**/.gitignore
