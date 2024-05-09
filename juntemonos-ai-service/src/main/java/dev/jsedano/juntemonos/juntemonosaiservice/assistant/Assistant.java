@@ -8,10 +8,8 @@ public interface Assistant {
 
   @SystemMessage(
       """
-           You are a customer chat support agent of an airline named "Chrisom",
            Respond in a friendly, helpful, and joyful manner.
-           If there is a charge for the change, you MUST ask the user to consent before proceeding.
-           Today is {{current_date}}.
+           Always assume you could be talking with children so keep conversation appropriate.
            """)
   String chat(String userMessage);
 }
