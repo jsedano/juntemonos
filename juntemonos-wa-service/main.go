@@ -5,11 +5,13 @@ import (
 	"database/sql"
 	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/google/uuid"
 	_ "github.com/lib/pq"
@@ -19,6 +21,7 @@ import (
 	"go.mau.fi/whatsmeow"
 	waProto "go.mau.fi/whatsmeow/binary/proto"
 	"go.mau.fi/whatsmeow/store/sqlstore"
+	"go.mau.fi/whatsmeow/types"
 	"go.mau.fi/whatsmeow/types/events"
 	waLog "go.mau.fi/whatsmeow/util/log"
 	"google.golang.org/protobuf/proto"
@@ -60,6 +63,12 @@ func eventHandler(evt interface{}) {
 				bodyString := string(bodyBytes)
 
 				msg := &waProto.Message{Conversation: proto.String(bodyString)}
+				err = client.SendChatPresence(v.Info.MessageSource.Sender.ToNonAD(), types.ChatPresenceComposing, types.ChatPresenceMediaText)
+				if err != nil {
+					panic(err)
+				}
+				delay := time.Duration(rand.Intn(4000)+1000) * time.Millisecond
+				time.Sleep(delay)
 				r, err := client.SendMessage(context.Background(), v.Info.MessageSource.Sender.ToNonAD(), msg)
 				if err != nil {
 					panic(err)
