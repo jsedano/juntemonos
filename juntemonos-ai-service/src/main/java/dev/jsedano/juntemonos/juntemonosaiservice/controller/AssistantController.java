@@ -17,7 +17,8 @@ class AssistantController {
   }
 
   @GetMapping("/assistant")
-  public String assistant(@RequestParam(value = "message") String message) {
-    return assistant.chat(message);
+  public String assistant(@RequestParam(value = "user") String user, @RequestParam(value = "message") String message) {
+    //return assistant.chat(message);
+    return "Hello " + user + ", " + message + "!";
   }
 }

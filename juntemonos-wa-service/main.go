@@ -11,9 +11,11 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/google/uuid"
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/mdp/qrterminal/v3"
+	"github.com/zeebo/xxh3"
 	"go.mau.fi/whatsmeow"
 	waProto "go.mau.fi/whatsmeow/binary/proto"
 	"go.mau.fi/whatsmeow/store/sqlstore"
@@ -23,23 +25,28 @@ import (
 )
 
 var client *whatsmeow.Client
-var log waLog.Logger
+var juntemonosAiServiceURL = os.Getenv("JUNTEMONOS_AI_SERVICE_URL")
+var logLevel = "INFO"
+var messageLog = waLog.Stdout("message_event", logLevel, true)
 
 func eventHandler(evt interface{}) {
 
 	switch v := evt.(type) {
 	case *events.Message:
-		fmt.Println("Received a message!", v.Message.GetConversation())
+		messageLog.Infof("Received a message!", v.Message.GetConversation())
 		if v.Message.GetConversation() != "" {
-			base, err := url.Parse("http://localhost:8080/assistant")
+			base, err := url.Parse(juntemonosAiServiceURL)
 			if err != nil {
-				return
+				panic(err)
 			}
+			h := xxh3.HashString128(v.Info.MessageSource.Sender.String()).Bytes()
+			guid, _ := uuid.FromBytes(h[:])
 			// Query params
 			params := url.Values{}
 			params.Add("message", v.Message.GetConversation())
+			params.Add("user", guid.String())
 			base.RawQuery = params.Encode()
-			fmt.Printf("Encoded URL is %q\n", base.String())
+			messageLog.Infof("Encoded URL is %q\n", base.String())
 			resp, err := http.Get(base.String())
 			if err != nil {
 				panic(err)
@@ -53,11 +60,11 @@ func eventHandler(evt interface{}) {
 				bodyString := string(bodyBytes)
 
 				msg := &waProto.Message{Conversation: proto.String(bodyString)}
-				r, err := client.SendMessage(context.Background(), v.Info.MessageSource.Sender, msg)
+				r, err := client.SendMessage(context.Background(), v.Info.MessageSource.Sender.ToNonAD(), msg)
 				if err != nil {
 					panic(err)
 				} else {
-					fmt.Println("Message sent (server timestamp: %s)", r.Timestamp)
+					messageLog.Infof("Message sent (server timestamp: %s)", r.Timestamp)
 				}
 			}
 
@@ -67,7 +74,7 @@ func eventHandler(evt interface{}) {
 }
 
 func main() {
-	dbLog := waLog.Stdout("Database", "DEBUG", true)
+	dbLog := waLog.Stdout("Database", logLevel, true)
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		os.Getenv("POSTGRES_HOST"), os.Getenv("POSTGRES_PORT"), os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_DB"))
