@@ -4,6 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"io"
+	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
 	"syscall"
@@ -12,15 +15,54 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/mdp/qrterminal/v3"
 	"go.mau.fi/whatsmeow"
+	waProto "go.mau.fi/whatsmeow/binary/proto"
 	"go.mau.fi/whatsmeow/store/sqlstore"
 	"go.mau.fi/whatsmeow/types/events"
 	waLog "go.mau.fi/whatsmeow/util/log"
+	"google.golang.org/protobuf/proto"
 )
 
+var client *whatsmeow.Client
+var log waLog.Logger
+
 func eventHandler(evt interface{}) {
+
 	switch v := evt.(type) {
 	case *events.Message:
 		fmt.Println("Received a message!", v.Message.GetConversation())
+		if v.Message.GetConversation() != "" {
+			base, err := url.Parse("http://localhost:8080/assistant")
+			if err != nil {
+				return
+			}
+			// Query params
+			params := url.Values{}
+			params.Add("message", v.Message.GetConversation())
+			base.RawQuery = params.Encode()
+			fmt.Printf("Encoded URL is %q\n", base.String())
+			resp, err := http.Get(base.String())
+			if err != nil {
+				panic(err)
+			}
+			defer resp.Body.Close()
+			if resp.StatusCode == http.StatusOK {
+				bodyBytes, err := io.ReadAll(resp.Body)
+				if err != nil {
+					panic(err)
+				}
+				bodyString := string(bodyBytes)
+
+				msg := &waProto.Message{Conversation: proto.String(bodyString)}
+				r, err := client.SendMessage(context.Background(), v.Info.MessageSource.Sender, msg)
+				if err != nil {
+					panic(err)
+				} else {
+					fmt.Println("Message sent (server timestamp: %s)", r.Timestamp)
+				}
+			}
+
+		}
+
 	}
 }
 
@@ -50,7 +92,7 @@ func main() {
 		panic(err)
 	}
 	clientLog := waLog.Stdout("Client", "DEBUG", true)
-	client := whatsmeow.NewClient(deviceStore, clientLog)
+	client = whatsmeow.NewClient(deviceStore, clientLog)
 	client.AddEventHandler(eventHandler)
 
 	if client.Store.ID == nil {
