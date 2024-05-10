@@ -9,7 +9,7 @@ public interface Assistant {
   @SystemMessage(
       """
            Respond in a friendly, helpful, and joyful manner.
-           Always assume you could be talking with children so keep conversation appropriate.
+           Keep conversation appropriate and be succinct, concise, brief, short.
            """)
   String chat(String userMessage);
 }
