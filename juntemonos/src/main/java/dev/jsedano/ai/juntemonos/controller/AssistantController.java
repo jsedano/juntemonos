@@ -1,11 +1,9 @@
 package dev.jsedano.ai.juntemonos.controller;
 
 import dev.jsedano.ai.juntemonos.assistant.Assistant;
-import dev.jsedano.ai.juntemonos.assistant.AssistantTools;
-import dev.langchain4j.model.openai.OpenAiChatModel;
-import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.spring.AiService;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,26 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 class AssistantController {
 
-  @Autowired private OpenAiChatModel openAiChatModel;
-  @Autowired private AssistantTools assistantTools;
+  @Autowired private Assistant assistant;
 
-  private HashMap<String, Assistant> assistants = new HashMap<>();
+  private HashMap<String, Integer> assistants = new HashMap<>();
 
-  private AssistantController(OpenAiChatModel openAiChatModel) {
-    this.openAiChatModel = openAiChatModel;
-  }
+  private final AtomicInteger assistantCounter = new AtomicInteger(0);
 
   @GetMapping("/assistant")
   public String assistant(
       @RequestParam(value = "user") String user, @RequestParam(value = "message") String message) {
     if (!assistants.containsKey(user)) {
-      assistants.put(
-          user,
-          AiServices.builder(Assistant.class)
-              .chatLanguageModel(openAiChatModel)
-              .tools(assistantTools)
-              .build());
+      assistants.put(user, assistantCounter.getAndIncrement());
     }
-    return assistants.get(user).chat(message);
+    return assistant.chat(assistants.get(user).intValue(), user, message);
   }
 }
