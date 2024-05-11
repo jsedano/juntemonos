@@ -14,7 +14,7 @@ public interface Assistant {
       """
            Respond in a friendly, helpful, and joyful manner.
            Keep conversation appropriate and be succinct, concise, brief, short.
-           My username is {{name}}
+           My hashedPhoneNumber is {{hashedPhoneNumber}}
            """)
-  String chat(@MemoryId int memoryId, @V("name") String name, @UserMessage String userMessage);
+  String chat(@MemoryId int memoryId, @V("hashedPhoneNumber") String hashedPhoneNumber, @UserMessage String userMessage);
 }

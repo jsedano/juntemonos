@@ -1,8 +1,11 @@
 package dev.jsedano.ai.juntemonos.controller;
 
 import dev.jsedano.ai.juntemonos.assistant.Assistant;
+import dev.jsedano.ai.juntemonos.repository.MemberRepository;
+import dev.jsedano.ai.juntemonos.model.Member;
 import dev.langchain4j.service.spring.AiService;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +22,19 @@ class AssistantController {
 
   private final AtomicInteger assistantCounter = new AtomicInteger(0);
 
+  @Autowired
+  private MemberRepository memberRepository;
+
   @GetMapping("/assistant")
   public String assistant(
-      @RequestParam(value = "user") String user, @RequestParam(value = "message") String message) {
-    if (!assistants.containsKey(user)) {
-      assistants.put(user, assistantCounter.getAndIncrement());
+      @RequestParam(value = "user") String hashedPhoneNumber, @RequestParam(value = "message") String message) {
+    
+    if(Objects.isNull(memberRepository.findByHashedPhoneNumber(hashedPhoneNumber))){
+      memberRepository.save(Member.builder().hashedPhoneNumber(hashedPhoneNumber).build());
     }
-    return assistant.chat(assistants.get(user).intValue(), user, message);
+    if (!assistants.containsKey(hashedPhoneNumber)) {
+      assistants.put(hashedPhoneNumber, assistantCounter.getAndIncrement());
+    }
+    return assistant.chat(assistants.get(hashedPhoneNumber).intValue(), hashedPhoneNumber, message);
   }
 }

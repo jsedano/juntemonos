@@ -42,7 +42,7 @@ func eventHandler(evt interface{}) {
 			if err != nil {
 				panic(err)
 			}
-			h := xxh3.HashString128(v.Info.MessageSource.Sender.String()).Bytes()
+			h := xxh3.HashString128(v.Info.MessageSource.Sender.ToNonAD().String()).Bytes()
 			guid, _ := uuid.FromBytes(h[:])
 			// Query params
 			params := url.Values{}
