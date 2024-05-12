@@ -22,3 +22,5 @@ INSERT INTO community_technologies(communities_id, technologies_id) VALUES(3, 2)
 INSERT INTO community_technologies(communities_id, technologies_id) VALUES(4, 3);
 INSERT INTO community_technologies(communities_id, technologies_id) VALUES(4, 4);
 INSERT INTO community_technologies(communities_id, technologies_id) VALUES(5, 5);
+
+INSERT INTO "event" (community_id, date_time, id, description, "location", title) VALUES(1, '2024-05-30 13:00:00.000', 1, 'Puro AI en Java', 'Hacker Garage', 'Meetup Mayo');

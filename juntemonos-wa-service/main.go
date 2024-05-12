@@ -36,8 +36,8 @@ func eventHandler(evt interface{}) {
 
 	switch v := evt.(type) {
 	case *events.Message:
-		messageLog.Infof("Received a message!", v.Message.GetConversation())
-		if v.Message.GetConversation() != "" {
+		//messageLog.Infof("Received a message!", v.Message.GetConversation())
+		if v.Message.GetConversation() != "" && len(v.Message.GetConversation()) < 200 {
 			base, err := url.Parse(juntemonosAiServiceURL)
 			if err != nil {
 				panic(err)

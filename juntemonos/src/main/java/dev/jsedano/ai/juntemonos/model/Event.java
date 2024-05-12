@@ -39,5 +39,5 @@ public class Event {
 
   @ManyToOne private Community community;
 
-  @ManyToMany private Set<Member> atendies;
+  @ManyToMany private Set<Member> attendees;
 }

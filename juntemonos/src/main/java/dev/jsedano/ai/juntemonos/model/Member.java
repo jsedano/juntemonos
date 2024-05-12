@@ -34,6 +34,6 @@ public class Member {
   @ManyToMany(mappedBy = "members")
   private Set<Community> communities;
 
-  @ManyToMany(mappedBy = "atendies")
+  @ManyToMany(mappedBy = "attendees")
   private Set<Event> events;
 }
