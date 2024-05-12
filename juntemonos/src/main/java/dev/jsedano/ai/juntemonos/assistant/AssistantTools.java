@@ -20,13 +20,13 @@ public class AssistantTools {
   @Autowired private MemberRepository memberRepository;
 
 
-  @Tool("Lists available communities")
+  @Tool("List available communities, do not mention communities outside this list")
   public List<Community> listCommunities() {
     return communityRepository.findAll();
   }
 
-  @Tool("Mak member join a community")
-  public boolean listCommunities(@V("hashedPhoneNumber") String member, @V("community") String communityName) {
+  @Tool("Make member join a community")
+  public boolean joinCommunity(@V("hashedPhoneNumber") String member, @V("community") String communityName) {
     
     Community community = communityRepository.findByName(communityName);
     if(Objects.nonNull(community)){
