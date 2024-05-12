@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,10 +30,10 @@ public class Community {
   @Column(name = "description")
   private String description;
 
-  @ManyToMany private List<Technology> technologies;
+  @ManyToMany private Set<Technology> technologies;
 
-  @ManyToMany private List<Member> members;
+  @ManyToMany private Set<Member> members;
 
   @OneToMany(mappedBy = "community")
-  private List<Event> events;
+  private Set<Event> events;
 }

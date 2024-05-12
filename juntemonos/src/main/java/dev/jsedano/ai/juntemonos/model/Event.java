@@ -9,7 +9,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,5 +39,5 @@ public class Event {
 
   @ManyToOne private Community community;
 
-  @ManyToMany private List<Member> atendies;
+  @ManyToMany private Set<Member> atendies;
 }
