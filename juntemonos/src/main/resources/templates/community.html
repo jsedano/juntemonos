@@ -12,9 +12,11 @@
     <h1><span th:text="${community.name}"></h1>
     <table>
         <tr>
-            <th>Member</th>
+            <th>Nickname</th>
+            <th>hashedPhoneNumber</th>
         </tr>
         <tr th:each="member : ${community.getMembers()}">
+            <td th:text="${member.nickname}"></td>
             <td th:text="${member.hashedPhoneNumber}"></td>
         </tr>
     </table>

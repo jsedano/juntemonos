@@ -1,6 +1,7 @@
 package dev.jsedano.ai.juntemonos.assistant;
 
 import dev.jsedano.ai.juntemonos.model.Community;
+import dev.jsedano.ai.juntemonos.model.Member;
 import dev.jsedano.ai.juntemonos.model.Technology;
 import dev.jsedano.ai.juntemonos.repository.CommunityRepository;
 import dev.jsedano.ai.juntemonos.repository.MemberRepository;
@@ -22,21 +23,43 @@ public class AssistantTools {
   @Autowired private MemberRepository memberRepository;
   @Autowired private TechnologyRepository technologyRepository;
 
+  @Tool("Set user nickname")
+  public boolean setNickname(
+      @V("hashedPhoneNumber") String hashedPhoneNumber, @P("nickname") String nickname) {
+    Member member = memberRepository.findByHashedPhoneNumber(hashedPhoneNumber);
+    member.setNickname(nickname);
+    memberRepository.save(member);
+    return true;
+  }
+
+  @Tool("Check if nickname is set")
+  public boolean checkIfNicknameIsSet(@V("hashedPhoneNumber") String hashedPhoneNumber) {
+    String nickname = memberRepository.findByHashedPhoneNumber(hashedPhoneNumber).getNickname();
+    return nickname == null ? nickname.isBlank() : true;
+  }
+
+  @Tool("Get user nickname")
+  public String getNickname(@V("hashedPhoneNumber") String hashedPhoneNumber) {
+    String nickname = memberRepository.findByHashedPhoneNumber(hashedPhoneNumber).getNickname();
+    return nickname == null ? "User does not have nickname" : nickname;
+  }
+
   @Tool("List available communities, do not mention communities outside this list")
-  public List<Community> listCommunities() {
-    return communityRepository.findAll();
+  public List<String> listCommunities() {
+    return communityRepository.findAll().stream().map(Community::getName).toList();
   }
 
   @Tool("Join a community")
   public boolean joinCommunity(
-      @V("hashedPhoneNumber") String member, @P("name of the community") String communityName) {
+      @V("hashedPhoneNumber") String hashedPhoneNumber,
+      @P("name of the community") String communityName) {
 
     Community community = communityRepository.findByName(communityName);
     if (Objects.nonNull(community)) {
       if (Objects.isNull(community.getMembers())) {
         community.setMembers(new ArrayList<>());
       }
-      community.getMembers().add(memberRepository.findByHashedPhoneNumber(member));
+      community.getMembers().add(memberRepository.findByHashedPhoneNumber(hashedPhoneNumber));
       communityRepository.save(community);
       return true;
     }
@@ -45,23 +68,27 @@ public class AssistantTools {
 
   @Tool(
       "List available technologies, programming languages, frameworks, do not mention technologies, programming languages, frameworks, outside this list")
-  public List<Technology> listTechnologies() {
-    return technologyRepository.findAll();
+  public List<String> listTechnologies() {
+    return technologyRepository.findAll().stream().map(Technology::getName).toList();
   }
 
   @Tool(
       "Look up communities by technology, programming language or framework used by the community")
-  public List<Community> listCommunitiesByTechnology(
+  public List<String> listCommunitiesByTechnology(
       @P("technology, programming language or framework") String technology) {
     Technology tech = technologyRepository.findByName(technology.toLowerCase());
     if (Objects.nonNull(tech)) {
-      return communityRepository.findAllByTechnologies(tech);
+      return communityRepository.findAllByTechnologies(tech).stream()
+          .map(Community::getName)
+          .toList();
     }
     return Collections.emptyList();
   }
 
   @Tool("Returns which communities the {{hashedPhoneNumber}} is part of")
-  public List<Community> listCommunitiesByMember(@V("hashedPhoneNumber") String member) {
-    return communityRepository.findAllByMembersHashedPhoneNumber(member);
+  public List<String> listCommunitiesByMember(@V("hashedPhoneNumber") String hashedPhoneNumber) {
+    return communityRepository.findAllByMembersHashedPhoneNumber(hashedPhoneNumber).stream()
+        .map(Community::getName)
+        .toList();
   }
 }

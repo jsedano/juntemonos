@@ -30,8 +30,8 @@ public class Member {
   @Column(name = "hashed_phone_number")
   private String hashedPhoneNumber;
 
-  @Column(name = "name")
-  private String name;
+  @Column(name = "nickname")
+  private String nickname;
 
   @ManyToMany(mappedBy = "members")
   private List<Community> communities;
