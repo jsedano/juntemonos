@@ -7,17 +7,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import java.util.Set;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "member")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 public class Member {
 
@@ -32,8 +34,8 @@ public class Member {
   private String name;
 
   @ManyToMany(mappedBy = "members")
-  private Set<Community> communities;
+  private List<Community> communities;
 
   @ManyToMany(mappedBy = "attendees")
-  private Set<Event> events;
+  private List<Event> events;
 }

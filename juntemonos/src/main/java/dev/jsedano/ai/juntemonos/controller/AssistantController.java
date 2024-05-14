@@ -33,10 +33,10 @@ class AssistantController {
 
     if (Objects.isNull(memberRepository.findByHashedPhoneNumber(hashedPhoneNumber))) {
       memberRepository.save(Member.builder().hashedPhoneNumber(hashedPhoneNumber).build());
-    } //else {
-   //   return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
-    //.body("Stop spamming the assistant!");
-    //}
+    } // else {
+    //   return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+    // .body("Stop spamming the assistant!");
+    // }
     if (!assistants.containsKey(hashedPhoneNumber)) {
       assistants.put(hashedPhoneNumber, assistantCounter.getAndIncrement());
     }

@@ -8,16 +8,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.Set;
+import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "community")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class Community {
 
   @Id
@@ -30,10 +32,10 @@ public class Community {
   @Column(name = "description")
   private String description;
 
-  @ManyToMany private Set<Technology> technologies;
+  @ManyToMany private List<Technology> technologies;
 
-  @ManyToMany private Set<Member> members;
+  @ManyToMany private List<Member> members;
 
   @OneToMany(mappedBy = "community")
-  private Set<Event> events;
+  private List<Event> events;
 }

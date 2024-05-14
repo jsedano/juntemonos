@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+
+<div>
+    <h1>Communities</h1>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr th:each="community : ${communities}">
+            <td><a th:href="@{./community/{name}(name=${community.name})}"><span th:text="${community.name}"></a></td>
+            <td th:text="${community.description}"></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+
+</html>

@@ -8,8 +8,8 @@ import dev.jsedano.ai.juntemonos.repository.TechnologyRepository;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.service.V;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class AssistantTools {
     Community community = communityRepository.findByName(communityName);
     if (Objects.nonNull(community)) {
       if (Objects.isNull(community.getMembers())) {
-        community.setMembers(new HashSet<>());
+        community.setMembers(new ArrayList<>());
       }
       community.getMembers().add(memberRepository.findByHashedPhoneNumber(member));
       communityRepository.save(community);

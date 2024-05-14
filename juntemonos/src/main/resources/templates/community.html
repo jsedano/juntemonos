@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+
+<div>
+    <h1><span th:text="${community.name}"></h1>
+    <table>
+        <tr>
+            <th>Member</th>
+        </tr>
+        <tr th:each="member : ${community.getMembers()}">
+            <td th:text="${member.hashedPhoneNumber}"></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+
+</html>

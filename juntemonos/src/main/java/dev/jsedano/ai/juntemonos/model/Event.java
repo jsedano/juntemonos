@@ -9,16 +9,18 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "event")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class Event {
 
   @Id
@@ -39,5 +41,5 @@ public class Event {
 
   @ManyToOne private Community community;
 
-  @ManyToMany private Set<Member> attendees;
+  @ManyToMany private List<Member> attendees;
 }
