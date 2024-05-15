@@ -35,7 +35,7 @@ public class AssistantTools {
   @Tool("Check if nickname is set")
   public boolean checkIfNicknameIsSet(@V("hashedPhoneNumber") String hashedPhoneNumber) {
     String nickname = memberRepository.findByHashedPhoneNumber(hashedPhoneNumber).getNickname();
-    return nickname == null ? nickname.isBlank() : true;
+    return nickname != null ? nickname.isBlank() : true;
   }
 
   @Tool("Get user nickname")
@@ -47,6 +47,12 @@ public class AssistantTools {
   @Tool("List available communities, do not mention communities outside this list")
   public List<String> listCommunities() {
     return communityRepository.findAll().stream().map(Community::getName).toList();
+  }
+
+
+  @Tool("Get the description of a community")
+  public String getCommunityDescription(@P("name of the community") String communityName) {
+    return communityRepository.findByName(communityName).getDescription();
   }
 
   @Tool("Join a community")

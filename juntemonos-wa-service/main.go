@@ -28,7 +28,7 @@ import (
 )
 
 var client *whatsmeow.Client
-var juntemonosAiServiceURL = os.Getenv("JUNTEMONOS_AI_SERVICE_URL")
+var juntemonosURL = os.Getenv("JUNTEMONOS_URL")
 var logLevel = "INFO"
 var messageLog = waLog.Stdout("message_event", logLevel, true)
 
@@ -37,8 +37,9 @@ func eventHandler(evt interface{}) {
 	switch v := evt.(type) {
 	case *events.Message:
 		//messageLog.Infof("Received a message!", v.Message.GetConversation())
+		current := time.Now()
 		if v.Message.GetConversation() != "" && len(v.Message.GetConversation()) < 200 {
-			base, err := url.Parse(juntemonosAiServiceURL)
+			base, err := url.Parse(juntemonosURL)
 			if err != nil {
 				panic(err)
 			}
@@ -67,8 +68,12 @@ func eventHandler(evt interface{}) {
 				if err != nil {
 					panic(err)
 				}
-				delay := time.Duration(rand.Intn(4000)+1000) * time.Millisecond
-				time.Sleep(delay)
+				elapsed := int(time.Since(current).Milliseconds())
+				if elapsed < 4000 {
+					delay := time.Duration(rand.Intn(elapsed)+1000) * time.Millisecond
+					time.Sleep(delay)
+				}
+
 				r, err := client.SendMessage(context.Background(), v.Info.MessageSource.Sender.ToNonAD(), msg)
 				if err != nil {
 					panic(err)
