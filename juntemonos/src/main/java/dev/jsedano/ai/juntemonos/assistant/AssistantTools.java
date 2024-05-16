@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AssistantTools {
-
+  
   @Autowired private CommunityRepository communityRepository;
   @Autowired private MemberRepository memberRepository;
   @Autowired private TechnologyRepository technologyRepository;
@@ -96,5 +96,14 @@ public class AssistantTools {
     return communityRepository.findAllByMembersHashedPhoneNumber(hashedPhoneNumber).stream()
         .map(Community::getName)
         .toList();
+  }
+
+  @Tool("List events of a community")
+  public List<String> listEvents(@P("name of the community") String communityName) {
+    Community community = communityRepository.findByName(communityName);
+    if (Objects.nonNull(community)) {
+      return community.getEvents().stream().map(event -> event.getTitle() + " - " + event.getDateTime()).toList();
+    }
+    return Collections.emptyList();
   }
 }
