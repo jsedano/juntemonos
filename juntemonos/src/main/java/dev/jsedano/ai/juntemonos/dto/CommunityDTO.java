@@ -15,4 +15,8 @@ public class CommunityDTO {
   private String description;
 
   private List<String> technologies;
+
+  private List<String> events;
+
+  private List<MemberIdDTO> members;
 }

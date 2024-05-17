@@ -8,11 +8,7 @@ import lombok.Data;
 @Builder
 public class MemberDTO {
 
-  private long id;
-
-  private String hashedPhoneNumber;
-
-  private String nickname;
+  private MemberIdDTO memberId;
 
   private List<String> communities;
 
