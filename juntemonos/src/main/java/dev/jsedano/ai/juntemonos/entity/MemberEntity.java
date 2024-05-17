@@ -1,4 +1,4 @@
-package dev.jsedano.ai.juntemonos.model;
+package dev.jsedano.ai.juntemonos.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class Member {
+public class MemberEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,8 +34,8 @@ public class Member {
   private String nickname;
 
   @ManyToMany(mappedBy = "members")
-  private List<Community> communities;
+  private List<CommunityEntity> communities;
 
   @ManyToMany(mappedBy = "attendees")
-  private List<Event> events;
+  private List<EventEntity> events;
 }

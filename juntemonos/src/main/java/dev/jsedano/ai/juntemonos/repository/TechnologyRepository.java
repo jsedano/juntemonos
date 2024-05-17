@@ -1,9 +1,9 @@
 package dev.jsedano.ai.juntemonos.repository;
 
-import dev.jsedano.ai.juntemonos.model.Technology;
+import dev.jsedano.ai.juntemonos.entity.TechnologyEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TechnologyRepository extends JpaRepository<Technology, Long> {
+public interface TechnologyRepository extends JpaRepository<TechnologyEntity, Long> {
 
-  public Technology findByName(String name);
+  public TechnologyEntity findByName(String name);
 }

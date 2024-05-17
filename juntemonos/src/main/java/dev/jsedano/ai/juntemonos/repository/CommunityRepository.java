@@ -1,15 +1,15 @@
 package dev.jsedano.ai.juntemonos.repository;
 
-import dev.jsedano.ai.juntemonos.model.Community;
-import dev.jsedano.ai.juntemonos.model.Technology;
+import dev.jsedano.ai.juntemonos.entity.CommunityEntity;
+import dev.jsedano.ai.juntemonos.entity.TechnologyEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CommunityRepository extends JpaRepository<Community, Long> {
+public interface CommunityRepository extends JpaRepository<CommunityEntity, Long> {
 
-  public Community findByName(String name);
+  public CommunityEntity findByName(String name);
 
-  public List<Community> findAllByTechnologies(Technology technology);
+  public List<CommunityEntity> findAllByTechnologies(TechnologyEntity technology);
 
-  public List<Community> findAllByMembersHashedPhoneNumber(String hashedPhoneNumber);
+  public List<CommunityEntity> findAllByMembersHashedPhoneNumber(String hashedPhoneNumber);
 }

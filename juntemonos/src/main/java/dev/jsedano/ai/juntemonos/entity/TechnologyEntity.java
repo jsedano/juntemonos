@@ -1,4 +1,4 @@
-package dev.jsedano.ai.juntemonos.model;
+package dev.jsedano.ai.juntemonos.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,9 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,30 +14,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "event")
+@Table(name = "technology")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Event {
+public class TechnologyEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
-  @Column(name = "title")
-  private String title;
+  @Column(name = "name")
+  private String name;
 
   @Column(name = "description")
   private String description;
 
-  @Column(name = "date_time")
-  private LocalDateTime dateTime;
-
-  @Column(name = "location")
-  private String location;
-
-  @ManyToOne private Community community;
-
-  @ManyToMany private List<Member> attendees;
+  @ManyToMany(mappedBy = "technologies")
+  private List<CommunityEntity> communities;
 }

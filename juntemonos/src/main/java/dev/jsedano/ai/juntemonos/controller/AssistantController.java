@@ -1,7 +1,7 @@
 package dev.jsedano.ai.juntemonos.controller;
 
 import dev.jsedano.ai.juntemonos.assistant.Assistant;
-import dev.jsedano.ai.juntemonos.model.Member;
+import dev.jsedano.ai.juntemonos.entity.MemberEntity;
 import dev.jsedano.ai.juntemonos.repository.MemberRepository;
 import dev.langchain4j.service.spring.AiService;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ class AssistantController {
       @RequestParam(value = "message") String message) {
 
     if (Objects.isNull(memberRepository.findByHashedPhoneNumber(hashedPhoneNumber))) {
-      memberRepository.save(Member.builder().hashedPhoneNumber(hashedPhoneNumber).build());
+      memberRepository.save(MemberEntity.builder().hashedPhoneNumber(hashedPhoneNumber).build());
     } // else {
     //   return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
     // .body("Stop spamming the assistant!");
