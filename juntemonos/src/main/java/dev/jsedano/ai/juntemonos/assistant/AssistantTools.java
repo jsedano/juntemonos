@@ -1,11 +1,13 @@
 package dev.jsedano.ai.juntemonos.assistant;
 
+import dev.jsedano.ai.juntemonos.dto.CommunityDTO;
 import dev.jsedano.ai.juntemonos.entity.CommunityEntity;
 import dev.jsedano.ai.juntemonos.entity.MemberEntity;
 import dev.jsedano.ai.juntemonos.entity.TechnologyEntity;
 import dev.jsedano.ai.juntemonos.repository.CommunityRepository;
 import dev.jsedano.ai.juntemonos.repository.MemberRepository;
 import dev.jsedano.ai.juntemonos.repository.TechnologyRepository;
+import dev.jsedano.ai.juntemonos.service.JuntemonosService;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.service.V;
@@ -13,15 +15,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class AssistantTools {
 
-  @Autowired private CommunityRepository communityRepository;
-  @Autowired private MemberRepository memberRepository;
-  @Autowired private TechnologyRepository technologyRepository;
+  private final CommunityRepository communityRepository;
+  private final MemberRepository memberRepository;
+  private final TechnologyRepository technologyRepository;
+  private final JuntemonosService juntemonosService;
 
   @Tool("Set user nickname")
   public boolean setNickname(
@@ -45,8 +49,9 @@ public class AssistantTools {
   }
 
   @Tool("List available communities, do not mention communities outside this list")
-  public List<String> listCommunities() {
-    return communityRepository.findAll().stream().map(CommunityEntity::getName).toList();
+  public List<CommunityDTO> listCommunities() {
+
+    return juntemonosService.getCommunities();
   }
 
   @Tool("Get the description of a community")
