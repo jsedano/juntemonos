@@ -6,7 +6,9 @@ import dev.jsedano.ai.juntemonos.entity.CommunityEntity;
 import dev.jsedano.ai.juntemonos.entity.MemberEntity;
 import dev.jsedano.ai.juntemonos.entity.TechnologyEntity;
 import dev.jsedano.ai.juntemonos.repository.CommunityRepository;
+import dev.jsedano.ai.juntemonos.repository.MemberRepository;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,45 @@ import org.springframework.stereotype.Service;
 public class JuntemonosService {
 
   private final CommunityRepository communityRepository;
+  private final MemberRepository memberRepository;
+
+  public Optional<MemberIdDTO> getMember(String hashedPhoneNumber) {
+    MemberEntity member = memberRepository.findByHashedPhoneNumber(hashedPhoneNumber);
+    return Optional.ofNullable(
+        Objects.nonNull(member)
+            ? mapToIdDTO(memberRepository.findByHashedPhoneNumber(hashedPhoneNumber))
+            : null);
+  }
+
+  public boolean saveMember(MemberIdDTO memberId) {
+    if (getMember(memberId.getHashedPhoneNumber()).isPresent()) {
+      return false;
+    }
+    MemberEntity member = mapToEntity(memberId);
+    memberRepository.save(member);
+    return true;
+  }
+
+  public boolean updateMember(MemberIdDTO memberId) {
+    MemberEntity member = memberRepository.findByHashedPhoneNumber(memberId.getHashedPhoneNumber());
+    if (Objects.isNull(member)) {
+      return false;
+    }
+    member.setNickname(memberId.getNickname());
+    memberRepository.save(member);
+    return true;
+  }
+
+  public boolean joinCommunity(String hashedPhoneNumber, String communityName) {
+    MemberEntity member = memberRepository.findByHashedPhoneNumber(hashedPhoneNumber);
+    CommunityEntity community = communityRepository.findByName(communityName);
+    if (Objects.isNull(member) || Objects.isNull(community)) {
+      return false;
+    }
+    community.getMembers().add(member);
+    communityRepository.save(community);
+    return true;
+  }
 
   public List<CommunityDTO> getCommunities() {
     return communityRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
@@ -44,6 +85,14 @@ public class JuntemonosService {
         .id(memberEntity.getId())
         .hashedPhoneNumber(memberEntity.getHashedPhoneNumber())
         .nickname(memberEntity.getNickname())
+        .build();
+  }
+
+  private MemberEntity mapToEntity(MemberIdDTO memberId) {
+    return MemberEntity.builder()
+        .id(memberId.getId())
+        .hashedPhoneNumber(memberId.getHashedPhoneNumber())
+        .nickname(memberId.getNickname())
         .build();
   }
 }
