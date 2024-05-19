@@ -7,6 +7,8 @@ import dev.jsedano.ai.juntemonos.entity.MemberEntity;
 import dev.jsedano.ai.juntemonos.entity.TechnologyEntity;
 import dev.jsedano.ai.juntemonos.repository.CommunityRepository;
 import dev.jsedano.ai.juntemonos.repository.MemberRepository;
+import dev.jsedano.ai.juntemonos.repository.TechnologyRepository;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -20,6 +22,7 @@ public class JuntemonosService {
 
   private final CommunityRepository communityRepository;
   private final MemberRepository memberRepository;
+  private final TechnologyRepository technologyRepository;
 
   public Optional<MemberIdDTO> getMember(String hashedPhoneNumber) {
     MemberEntity member = memberRepository.findByHashedPhoneNumber(hashedPhoneNumber);
@@ -27,6 +30,16 @@ public class JuntemonosService {
         Objects.nonNull(member)
             ? mapToIdDTO(memberRepository.findByHashedPhoneNumber(hashedPhoneNumber))
             : null);
+  }
+
+  public List<CommunityDTO> getCommunitiesByTechnologies(String technology) {
+    TechnologyEntity technologyEntity = technologyRepository.findByName(technology);
+    if (Objects.isNull(technologyEntity)) {
+      return Collections.emptyList();
+    }
+    return communityRepository.findAllByTechnologies(technologyEntity).stream()
+        .map(this::mapToDTO)
+        .collect(Collectors.toList());
   }
 
   public boolean saveMember(MemberIdDTO memberId) {

@@ -73,4 +73,9 @@ public class AssistantTools {
     }
     return "Community not found";
   }
+
+  @Tool("List communities by technology")
+  public List<CommunityDTO> listCommunitiesByTechnology(@V("technology") String technology) {
+    return juntemonosService.getCommunitiesByTechnologies(technology.toLowerCase());
+  }
 }
