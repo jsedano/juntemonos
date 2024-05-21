@@ -67,6 +67,9 @@ public class JuntemonosService {
     if (Objects.isNull(member) || Objects.isNull(community)) {
       return false;
     }
+    if (member.getCommunities().stream().anyMatch(c -> c.getName().equals(communityName))) {
+      return false;
+    }
     community.getMembers().add(member);
     communityRepository.save(community);
     return true;
