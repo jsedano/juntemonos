@@ -11,6 +11,4 @@ public class MemberDTO {
   private MemberIdDTO memberId;
 
   private List<String> communities;
-
-  private List<String> events;
 }

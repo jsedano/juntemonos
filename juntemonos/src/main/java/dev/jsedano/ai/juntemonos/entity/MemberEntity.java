@@ -35,7 +35,4 @@ public class MemberEntity {
 
   @ManyToMany(mappedBy = "members")
   private List<CommunityEntity> communities;
-
-  @ManyToMany(mappedBy = "attendees")
-  private List<EventEntity> events;
 }

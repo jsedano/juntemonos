@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -35,7 +34,4 @@ public class CommunityEntity {
   @ManyToMany private List<TechnologyEntity> technologies;
 
   @ManyToMany private List<MemberEntity> members;
-
-  @OneToMany(mappedBy = "community")
-  private List<EventEntity> events;
 }
