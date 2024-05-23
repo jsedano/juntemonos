@@ -10,9 +10,12 @@ INSERT INTO technology (id, description, "name") VALUES(3, 'go programming langu
 INSERT INTO technology (id, description, "name") VALUES(4, 'go programming language', 'golang');
 INSERT INTO technology (id, description, "name") VALUES(5, 'ruby programming language', 'ruby');
 INSERT INTO technology (id, description, "name") VALUES(6, 'one can not imagine java without spring', 'spring');
+INSERT INTO technology (id, description, "name") VALUES(7, 'orlando cano secret weapon', 'lombok');
+
 
 INSERT INTO community_technologies(communities_id, technologies_id) VALUES(1, 1);
 INSERT INTO community_technologies(communities_id, technologies_id) VALUES(1, 6);
+INSERT INTO community_technologies(communities_id, technologies_id) VALUES(1, 7);
 INSERT INTO community_technologies(communities_id, technologies_id) VALUES(2, 1);
 INSERT INTO community_technologies(communities_id, technologies_id) VALUES(2, 2);
 INSERT INTO community_technologies(communities_id, technologies_id) VALUES(2, 3);
